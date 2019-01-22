@@ -2,17 +2,8 @@
 * submitting
 *)
 
-(* add the functions
-*
-* listdictfind
-* listdictadd
-* lz78e
-*
-* as specified in the assignment
-*)
 
-
-(* ----- add ----- *)
+(* ----- dictionary add ----- *)
 
 
 (*    (’a * ’b) list -> ’a * ’b -> (’a * ’b) list    *)
@@ -21,7 +12,7 @@ fun listdictadd (dict:('a * 'b) list) =
     fn (pair:('a * 'b)) => dict @ [ pair ];
 
 
-(* ----- find ----- *)
+(* ----- dictionary find ----- *)
 
 
 (*    (’’a * ’b) list -> ’’a -> ’b option    *)
@@ -36,7 +27,7 @@ fun listdictfind (dict:(''a * 'b) list) =
 (* ----- compression ----- *)
 
 (*
-    ([],listdictfind,listdictadd) []
+    Not sure how to do this
     the encode takes a dictionary, the list of characters, the index, the substring, the list to return ?
 *)
 
@@ -86,11 +77,27 @@ in
 end;
 
 
-(* ----- test cases ----- *)
+(* ----- function wrappers for compress and decompress ----- *)
 
 (* uncomment below when you've added listdictfind and listdictadd *)
-(* fun lz78ld l = lz78d ([],listdictfind,listdictadd) l; *)
+fun lz78ld l = lz78d ([],listdictfind,listdictadd) l;
 
 
 (* uncomment below when you've added the above, plus lz78e *)
-(* fun lz78le l = lz78e ([],listdictfind,listdictadd) l; *)
+fun lz78le l = lz78e ([],listdictfind,listdictadd) l;
+
+
+(* ----- test cases ----- *)
+
+(*
+
+lz78le (explode "aababbaba");
+
+val it = [(0, #"a"),(1,#"b"),( 2 ,#"b"),(2,#"a")];
+implode (lz78ld it);
+
+lz78le(lz78le(explode "aababbabb"));
+
+*)
+
+

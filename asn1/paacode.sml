@@ -33,16 +33,14 @@ fun listdictfind (dict:(''a * 'b) list) =
 
 fun lz78e (book,lookup,addto) = fn (charlist:('b list)) =>
     let
-        fun encode (dict, clist, index)  =
-            if null(clist) then
-                dict
-            else
-                if (lookup(dict) (hd(clist)) = NONE) then
-                        encode( (addto(dict) (hd(clist), index), tl(clist), index+1))
+        fun encode (dict, nil, _) = dict     (* empty char list, end of input *)
+        |   encode (dict, clist, index)  =
+                if not (lookup(dict) (hd(clist)) = NONE) then    (* current char exists in dict, don't add and look at next *)
+                    encode( dict, tl(clist), index+1 )
                 else
-                    encode (dict, tl(clist), index+1)
+                    encode( (addto(dict) (hd(clist),index)), tl(clist), 0 )    (* add to pair to dict and reset index *)
     in
-        encode (book, charlist, 0)
+        encode(book, charlist, 0)
     end;
 
 
@@ -95,6 +93,8 @@ lz78le (explode "aababbaba");
 
 val it = [(0, #"a"),(1,#"b"),( 2 ,#"b"),(2,#"a")];
 implode (lz78ld it);
+
+lz78le (explode "hihihiyahiyahiya!");
 
 lz78le(lz78le(explode "aababbabb"));
 

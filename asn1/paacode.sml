@@ -35,10 +35,11 @@ fun lz78e (book,lookup,addto) = fn (charlist:('b list)) =>
     let
         fun encode (dict, nil, _) = dict     (* empty char list, end of input *)
         |   encode (dict, clist, index)  =
-                if not (lookup(dict) (hd(clist)) = NONE) then    (* current char exists in dict, don't add and look at next *)
-                    encode( dict, tl(clist), index+1 )
-                else
+                if (lookup(dict) (hd(clist)) = NONE) then
                     encode( (addto(dict) (hd(clist),index)), tl(clist), 0 )    (* add to pair to dict and reset index *)
+                else                                                           (* current char exists in dict, don't add and look at next *)
+                    encode( dict, tl(clist), index+1 )
+
     in
         encode(book, charlist, 0)
     end;

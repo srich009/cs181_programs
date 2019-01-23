@@ -29,19 +29,25 @@ fun listdictfind (dict:(''a * 'b) list) =
 (*
     Not sure how to do this
     the encode takes a dictionary, the list of characters, the index, the substring, the list to return ?
+    need the substring because cant look back after an call
+    need the return list because the add and find will produce a list of pairs like (char,int) and it needs to be (int,char)
 *)
 
 fun lz78e (book,lookup,addto) = fn (charlist:('b list)) =>
     let
-        fun encode (dict, nil, _) = dict     (* empty char list, end of input *)
-        |   encode (dict, clist, index)  =
-                if (lookup(dict) (hd(clist)) = NONE) then
-                    encode( (addto(dict) (hd(clist),index)), tl(clist), 0 )    (* add to pair to dict and reset index *)
-                else                                                           (* current char exists in dict, don't add and look at next *)
-                    encode( dict, tl(clist), index+1 )
-
+        fun encode (dict, nil, _, _, rlist) = rlist          (* empty char list, end of input *)
+        |   encode (dict, clist, index, substr, rlist)  =
+                if (lookup(dict) (hd(clist)) = NONE) then    (* add to pair to dict and reset index *)
+                    let
+                        val newdict  = ( addto(dict) (hd(clist),index) )
+                        val newrlist = ( rlist@[(index,hd(clist))] )  (* CANT use addto here, raises an: uncaught exception Match [nonexhaustive match failure] *)
+                    in
+                        encode( newdict, tl(clist), 0, [], newrlist )
+                    end
+                else                                          (* current char exists in dict, don't add and look at next *)
+                    encode( dict, tl(clist), index+1, substr@[hd(clist)], rlist )
     in
-        encode(book, charlist, 0)
+        encode(book, charlist, 0, [], [])
     end;
 
 

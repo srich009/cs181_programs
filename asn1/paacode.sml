@@ -28,27 +28,28 @@ fun listdictfind (dict:(''a * 'b) list) =
 
 (*
     Not sure how to do this
-    the encode takes a dictionary, the list of characters, the index, the substring, the list to return ?
+    the encode takes a dictionary, the input list of characters, the index, the substring, the list to return ?
     need the substring because cant look back after an call
     need the return list because the add and find will produce a list of pairs like (char,int) and it needs to be (int,char)
 *)
 
 fun lz78e (book,lookup,addto) = fn (charlist:('b list)) =>
     let
-        fun encode (dict, nil, _, _, rlist) = rlist (* dict *)          (* empty char list, end of input *)
-        |   encode (dict, clist, index, substr, rlist)  =
+        fun encode (dict, nil, _, _, rlist) =  (dict,rlist)  (* dict *)           (* empty char list, end of input *)
+        |   encode (dict, input, index, substr, rlist)  =
             let
-                val otherstr = substr@[hd(clist)] (* cur substr plus the next char *)
+                val newstr = substr@[hd(input)] (* cur substr plus the next char *)
+                val lookedfor = (lookup(dict) newstr)
             in
-                if (lookup(dict) otherstr) = NONE then    (* add to pair to dict and reset index *)
+                if lookedfor = NONE then    (* add to pair to dict and reset index *)
                     let
-                        val newdict  = ( addto(dict) (otherstr,index) )
-                        val newrlist = ( rlist@[(index,hd(clist))] )  (* CANT use addto here, raises an: uncaught exception Match [nonexhaustive match failure] *)
+                        val newdict  = ( addto(dict) (newstr,index) )
+                        val newrlist = ( rlist@[(index,hd(input))] )  (* CANT use addto here, raises an: uncaught exception Match [nonexhaustive match failure] *)
                     in
-                        encode( newdict, tl(clist), 0, [], newrlist )
+                        encode( newdict, tl(input), 0, [], newrlist )
                     end
                 else                                     (* current char exists in dict, don't add and look at next *)
-                    encode( dict, tl(clist), index+1, otherstr, rlist )
+                    encode( dict, tl(input), index+1, newstr, rlist )
             end
     in
         encode(book, charlist, 0, [], [])
@@ -102,10 +103,12 @@ fun lz78le l = lz78e ([],listdictfind,listdictadd) l;
 
 lz78le (explode "aababbaba");
 
+lz78le (explode "hihihiyahiyahiya!");
+
+lz78le [1,5,5,5,5,1,5,5,5,5];
+
 val it = [(0, #"a"),(1,#"b"),( 2 ,#"b"),(2,#"a")];
 implode (lz78ld it);
-
-lz78le (explode "hihihiyahiyahiya!");
 
 lz78le(lz78le(explode "aababbabb"));
 

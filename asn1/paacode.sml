@@ -35,20 +35,20 @@ fun listdictfind (dict:(''a * 'b) list) =
 
 fun lz78e (book,lookup,addto) = fn (charlist:('b list)) =>
     let
-        fun encode (dict, nil, _, _, rlist) =  (dict,rlist)  (* dict *)           (* empty char list, end of input *)
+        fun encode (dict, nil, _, _, rlist) =  (rlist,dict) (* empty char list, end of input, return the (int * char) list *)
         |   encode (dict, input, index, substr, rlist)  =
             let
-                val newstr = substr@[hd(input)] (* cur substr plus the next char *)
-                val lookedfor = (lookup(dict) newstr)
+                val newstr    = substr @ [hd(input)]    (* current substr plus the next char *)
+                val lookedfor = lookup dict newstr      (* try and find newstr in dictionary *)
             in
-                if lookedfor = NONE then    (* add to pair to dict and reset index *)
+                if lookedfor = NONE then    (* if not found, then add to pair to dict and reset index *)
                     let
-                        val newdict  = ( addto(dict) (newstr,index) )
-                        val newrlist = ( rlist@[(index,hd(input))] )  (* CANT use addto here, raises an: uncaught exception Match [nonexhaustive match failure] *)
+                        val newdict  = addto dict (newstr,index)
+                        val newrlist = rlist @ [(index,hd(input))]   (* CANT use addto here, raises an: uncaught exception Match [nonexhaustive match failure] *)
                     in
                         encode( newdict, tl(input), 0, [], newrlist )
                     end
-                else                                     (* current char exists in dict, don't add and look at next *)
+                else                        (* current char exists in dict, don't add and look at next *)
                     encode( dict, tl(input), index+1, newstr, rlist )
             end
     in

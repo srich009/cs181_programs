@@ -53,12 +53,12 @@ fun lz78e (book,lookup,addto) = fn (charlist:('b list)) =>
                     else                    (* case for more than 1 letter *)
                         let
                             val newdict  = addto dict (newstr,index)
-                            val newrlist = rlist @ [ ( valOf(lookedfor2)+1, hd(input) ) ]   (* want the index of the substr in dictionary + 1 *)
+                            val newrlist = rlist @ [ ( valOf(lookedfor2), hd(input) ) ]   (* want the index of the substr in dictionary + 1 *)
                         in
                             encode( newdict, tl(input), index+1, [], newrlist ) (* added 1 thing to dictionary, increment index + 1 *)
                         end
                 else                        (* current string exists in dict, *)
-                    if null(tl(input)) then (* special last case here *)
+                    if null(tl(input)) then (* special last case here to add *)
                         let
                             val newdict  = (addto dict) (newstr,index)
                             val newrlist = rlist @ [ ( valOf(lookedfor), hd(input) ) ]   (* want the index of the substr in dictionary *)
@@ -69,7 +69,7 @@ fun lz78e (book,lookup,addto) = fn (charlist:('b list)) =>
                         encode( dict, tl(input), index, newstr, rlist )
             end
     in
-        encode(book, charlist, 0, [], [])
+        encode(book, charlist, 1, [], [])
     end;
 
 
@@ -123,6 +123,8 @@ lz78le (explode "aababbaba");
 lz78le (explode "hihihiyahiyahiya!");
 
 lz78le [1,5,5,5,5,1,5,5,5,5];
+
+lz78le (explode "aababbabb");
 
 val it = [(0, #"a"),(1,#"b"),( 2 ,#"b"),(2,#"a")];
 implode (lz78ld it);

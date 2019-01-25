@@ -38,18 +38,28 @@ fun lz78e (book,lookup,addto) = fn (charlist:('b list)) =>
         fun encode (dict, nil, _, _, rlist) =  (rlist,dict) (* empty char list, end of input, return the (int * char) list *)
         |   encode (dict, input, index, substr, rlist)  =
             let
-                val newstr    = substr @ [hd(input)]    (* current substr plus the next char *)
-                val lookedfor = lookup dict newstr      (* try and find newstr in dictionary *)
+                val newstr     = substr @ [hd(input)]    (* current substr plus the next char *)
+                val lookedfor  = lookup dict newstr      (* try and find newstr in dictionary *)
+                val lookedfor2 = lookup dict substr      (* try and find substr in dictionary *)
             in
-                if lookedfor = NONE then    (* if not found, then add to pair to dict and reset index *)
-                    let
-                        val newdict  = addto dict (newstr,index)
-                        val newrlist = rlist @ [(index,hd(input))]   (* CANT use addto here, raises an: uncaught exception Match [nonexhaustive match failure] *)
-                    in
-                        encode( newdict, tl(input), 0, [], newrlist )
-                    end
-                else                        (* current char exists in dict, don't add and look at next *)
-                    encode( dict, tl(input), index+1, newstr, rlist )
+                if lookedfor = NONE then      (* if not found, then add to pair to dict and reset index *)
+                    if lookedfor2 = NONE then (* case for single letters *)
+                        let
+                            val newdict  = addto dict (newstr,index)
+                            val newrlist = rlist @ [ ( 0, hd(input) ) ]
+                        in
+                            encode( newdict, tl(input), index+1, [], newrlist ) (* added 1 thing to dictionary, increment index + 1 *)
+                        end
+                    else                    (* case for more than 1 letter *)
+                        let
+                            val newdict  = addto dict (newstr,index)
+                            val newrlist = rlist @ [ ( valOf(lookedfor2)+1, hd(input) ) ]   (* want the index of the substr in dictionary + 1 *)
+                        in
+                            encode( newdict, tl(input), index+1, [], newrlist ) (* added 1 thing to dictionary, increment index + 1 *)
+                        end
+                else                        (* current string exists in dict, don't add, dont increment index, look at next *)
+                    encode( dict, tl(input), index, newstr, rlist )
+                    (* FIXME should handle the special last case here *)
             end
     in
         encode(book, charlist, 0, [], [])

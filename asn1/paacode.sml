@@ -35,7 +35,7 @@ fun listdictfind (dict:(''a * 'b) list) =
 
 fun lz78e (book,lookup,addto) = fn (charlist:('b list)) =>
     let
-        fun encode (dict, nil, _, _, rlist) =  (rlist,dict) (* empty char list, end of input, return the (int * char) list *)
+        fun encode (dict, nil, _, _, rlist) = rlist (* empty char list, end of input, return the (int * char) list *)
         |   encode (dict, input, index, substr, rlist)  =
             let
                 val newstr     = substr @ [hd(input)]    (* current substr plus the next char *)

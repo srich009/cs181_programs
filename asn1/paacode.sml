@@ -57,14 +57,22 @@ fun lz78e (book,lookup,addto) = fn (charlist:('b list)) =>
                         in
                             encode( newdict, tl(input), index+1, [], newrlist ) (* added 1 thing to dictionary, increment index + 1 *)
                         end
-                else                        (* current string exists in dict, *)
+                else                        (* current string exists in dict *)
                     if null(tl(input)) then (* special last case here to add *)
-                        let
-                            val newdict  = (addto dict) (newstr,index)
-                            val newrlist = rlist @ [ ( valOf(lookedfor), hd(input) ) ]   (* want the index of the substr in dictionary *)
-                        in
-                            encode( newdict, tl(input), index, [], newrlist ) (* added last thing to dictionary *)
-                        end
+                        if lookedfor2 = NONE then (* no prefix *)
+                            let
+                                val newdict  = addto dict (newstr,index)
+                                val newrlist = rlist @ [ ( 0, hd(input) ) ]
+                            in
+                                encode( newdict, tl(input), index+1, [], newrlist ) (* added last thing to dictionary, inc index*)
+                            end
+                        else                    (* prefix exists *)
+                            let
+                                val newdict  = (addto dict) (newstr,index)
+                                val newrlist = rlist @ [ ( valOf(lookedfor2), hd(input) ) ]   (* want the index of the substr in dictionary *)
+                            in
+                                encode( newdict, tl(input), index+1, [], newrlist ) (* added last thing to dictionary, inc index *)
+                            end
                     else                    (*  don't add, dont increment index, look at next *)
                         encode( dict, tl(input), index, newstr, rlist )
             end

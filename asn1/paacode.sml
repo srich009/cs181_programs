@@ -41,24 +41,14 @@ fun lz78e (book,lookup,addto) = fn (charlist:('b list)) =>
                 val newstr     = substr @ [hd(input)]    (* current substr plus the next char *)
                 val lookedfor  = lookup dict newstr      (* try and find newstr in dictionary *)
                 val lookedfor2 = lookup dict substr      (* try and find substr in dictionary *)
+                val newdict  = addto dict (newstr,index)
+                val newrlist = if lookedfor2 = NONE then rlist @ [ ( 0, hd(input) ) ] (* case for single letters *)
+                                                    else rlist @ [ ( valOf(lookedfor2), hd(input) ) ]
             in
-                if lookedfor = NONE orelse null(tl(input)) then      (* if string not found, or is last char then add to pair to dict and reset index *)
-                    if lookedfor2 = NONE then (* case for single letters *)
-                        let
-                            val newdict  = addto dict (newstr,index)
-                            val newrlist = rlist @ [ ( 0, hd(input) ) ]
-                        in
-                            encode( newdict, tl(input), index+1, [], newrlist ) (* added 1 thing to dictionary, increment index + 1 *)
-                        end
-                    else                    (* case for more than 1 letter *)
-                        let
-                            val newdict  = addto dict (newstr,index)
-                            val newrlist = rlist @ [ ( valOf(lookedfor2), hd(input) ) ]   (* want the index of the substr in dictionary + 1 *)
-                        in
-                            encode( newdict, tl(input), index+1, [], newrlist ) (* added 1 thing to dictionary, increment index + 1 *)
-                        end
-                else                        (* current string exists in dict *)
-                        encode( dict, tl(input), index, newstr, rlist )
+                if lookedfor = NONE orelse null(tl(input)) then      (* string not found, or is last char -> add to pair to dict, and index + 1 *)
+                    encode( newdict, tl(input), index+1, [], newrlist )
+                else                                                 (* current string exists in dict *)
+                    encode( dict, tl(input), index, newstr, rlist )
             end
     in
         encode(book, charlist, 1, [], [])

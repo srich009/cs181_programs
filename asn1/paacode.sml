@@ -2,66 +2,56 @@
 * submitting
 *)
 
-
 (* ----- dictionary add ----- *)
-
 
 (*    (’a * ’b) list -> ’a * ’b -> (’a * ’b) list    *)
 
-fun listdictadd (dict:('a * 'b) list) =
-    fn (pair:('a * 'b)) => dict @ [ pair ];
+fun listdictadd (dict:('a * 'b) list) (pair:('a * 'b)) = dict @ [ pair ];
 
 
 (* ----- dictionary find ----- *)
 
-
 (*    (’’a * ’b) list -> ’’a -> ’b option    *)
 
-fun listdictfind (dict:(''a * 'b) list) =
-    fn (key:(''a)) =>
-        if (null(dict)) then NONE
-        else if (#1(hd(dict))) = key then SOME(#2(hd(dict)))
-        else listdictfind(tl(dict)) key;
-
+fun listdictfind (dict:(''a * 'b) list) (key:(''a)) =
+    if (null(dict)) then NONE
+    else if (#1(hd(dict))) = key then SOME(#2(hd(dict)))
+    else listdictfind(tl(dict)) key;
 
 (* ----- compression ----- *)
 
 (*
-    Not sure how to do this
-    the encode takes a dictionary, the input list of characters, the index, the substring, the list to return ?
-    need the substring because cant look back after an call
-    need the return list because the add and find will produce a list of pairs like (char,int) and it needs to be (int,char)
+    the encode takes a dictionary, the input list of characters, the index, the substring, the list to return
+    need the substring because cant look back after an call, need the return list and it needs to be (int,char)
+    the add and find will look in dict produce pairs like (char list,int) 
 *)
 
-fun lz78e (book,lookup,addto) = fn (charlist:('b list)) =>
-    let
-        fun encode (dict, nil, _, _, rlist) = rlist (* empty char list, end of input, return the (int * char) list *)
-        |   encode (dict, input, index, substr, rlist)  =
-            let
-                val newstr     = substr @ [hd(input)]    (* current substr plus the next char *)
-                val lookedfor  = lookup dict newstr      (* try and find newstr in dictionary *)
-                val lookedfor2 = lookup dict substr      (* try and find substr in dictionary *)
-                val newdict  = addto dict (newstr,index)
-                val newrlist = if lookedfor2 = NONE then rlist @ [ ( 0, hd(input) ) ] (* case for single letters *)
-                                                    else rlist @ [ ( valOf(lookedfor2), hd(input) ) ]
-            in
-                if lookedfor = NONE orelse null(tl(input)) then      (* string not found, or is last char -> add to pair to dict, and index + 1 *)
-                    encode( newdict, tl(input), index+1, [], newrlist )
-                else                                                 (* current string exists in dict *)
-                    encode( dict, tl(input), index, newstr, rlist )
-            end
-    in
-        encode(book, charlist, 1, [], [])
-    end;
-
+fun lz78e (book,lookup,addto) (charlist:('b list)) =
+let
+    fun encode (dict, nil, _, _, rlist) = rlist      (* empty char list, end of input -> return the (int * char) list *)
+    |   encode (dict, input, index, substr, rlist)  =
+        let
+            val newstr     = substr @ [hd(input)]    (* current substr plus the next char *)
+            val lookedfor  = lookup dict newstr      (* try and find newstr in dictionary *)
+            val lookedfor2 = lookup dict substr      (* try and find substr in dictionary *)
+            val newdict  = addto dict (newstr,index)
+            val newrlist = if lookedfor2 = NONE then rlist @ [ ( 0, hd(input) ) ]  (* case for single letters *)
+                                                else rlist @ [ ( valOf(lookedfor2), hd(input) ) ]
+        in
+            if lookedfor = NONE orelse null(tl(input)) then      (* string not found, or is last char -> add to pair to dict, index + 1 *)
+                encode( newdict, tl(input), index+1, [], newrlist )
+            else                                                 (* current string exists in dict, look at next *)
+                encode( dict, tl(input), index, newstr, rlist )
+        end
+in
+    encode(book, charlist, 1, [], [])
+end;
 
 (* ----- decompression ----- *)
-
 
 (* LZ78 decompression algorithm *)
 fun lz78d (emptybook,inbook,addbook) l =
 let
-
   (* decode takes a codebook, a list of pairs, and the next index *)
   fun decode _ nil _ = nil
     | decode dict ((ind,h)::t) c =
@@ -85,16 +75,11 @@ in
    decode emptybook l 1
 end;
 
-
 (* ----- function wrappers for compress and decompress ----- *)
 
-(* uncomment below when you've added listdictfind and listdictadd *)
 fun lz78ld l = lz78d ([],listdictfind,listdictadd) l;
 
-
-(* uncomment below when you've added the above, plus lz78e *)
 fun lz78le l = lz78e ([],listdictfind,listdictadd) l;
-
 
 (* ----- test cases ----- *)
 

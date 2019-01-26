@@ -42,7 +42,7 @@ fun lz78e (book,lookup,addto) = fn (charlist:('b list)) =>
                 val lookedfor  = lookup dict newstr      (* try and find newstr in dictionary *)
                 val lookedfor2 = lookup dict substr      (* try and find substr in dictionary *)
             in
-                if lookedfor = NONE then      (* if string not found, then add to pair to dict and reset index *)
+                if lookedfor = NONE orelse null(tl(input)) then      (* if string not found, or is last char then add to pair to dict and reset index *)
                     if lookedfor2 = NONE then (* case for single letters *)
                         let
                             val newdict  = addto dict (newstr,index)
@@ -58,22 +58,6 @@ fun lz78e (book,lookup,addto) = fn (charlist:('b list)) =>
                             encode( newdict, tl(input), index+1, [], newrlist ) (* added 1 thing to dictionary, increment index + 1 *)
                         end
                 else                        (* current string exists in dict *)
-                    if null(tl(input)) then (* special last case here to add *)
-                        if lookedfor2 = NONE then (* no prefix *)
-                            let
-                                val newdict  = addto dict (newstr,index)
-                                val newrlist = rlist @ [ ( 0, hd(input) ) ]
-                            in
-                                encode( newdict, tl(input), index+1, [], newrlist ) (* added last thing to dictionary, inc index*)
-                            end
-                        else                    (* prefix exists *)
-                            let
-                                val newdict  = (addto dict) (newstr,index)
-                                val newrlist = rlist @ [ ( valOf(lookedfor2), hd(input) ) ]   (* want the index of the substr in dictionary *)
-                            in
-                                encode( newdict, tl(input), index+1, [], newrlist ) (* added last thing to dictionary, inc index *)
-                            end
-                    else                    (*  don't add, dont increment index, look at next *)
                         encode( dict, tl(input), index, newstr, rlist )
             end
     in

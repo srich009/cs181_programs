@@ -54,24 +54,19 @@ fun find23 _ EmptyTree _ =  NONE
 
 (*  Type:  ('a * 'a -> int) -> 'a baltree -> 'a -> 'a baltree  *)
 
-datatype 'a my_problem = problem of 'a * 'a baltree * 'a baltree | ok of 'a baltree;
-
-fun insert23 comp tree value =
+fun insert23 c t v =
 let
+    datatype 'a my_problem = problem of 'a * 'a baltree * 'a baltree | ok of 'a baltree;
 
-    fun helper (ok(atree)) = atree
-    |   helper (problem(extra, lsubtree, rsubtree)) =
-            Node2(extra,lsubtree,rsubtree)
-
-    fun my_insert23 _ EmptyTree item = ok(Node2(item, EmptyTree, EmptyTree))    (* emptytree *)
+    fun my_insert23 _ EmptyTree item = Node2(item, EmptyTree, EmptyTree)    (* emptytree *)
 
     |   my_insert23 cmp (Node2(midval, EmptyTree, EmptyTree)) item =        (* 2node with no children *)
             if (cmp item midval) = ~1 then
-                ok(Node3(item, midval, EmptyTree, EmptyTree, EmptyTree))
+                Node3(item, midval, EmptyTree, EmptyTree, EmptyTree)
             else
-                ok(Node3(midval, item, EmptyTree, EmptyTree, EmptyTree))
+                Node3(midval, item, EmptyTree, EmptyTree, EmptyTree)
 
-    |   my_insert23 cmp (Node3(loval, hival, EmptyTree, EmptyTree, EmptyTree)) item =  (* 3node with no children *) (* return problem *)
+    |   my_insert23 cmp (Node3(loval, hival, EmptyTree, EmptyTree, EmptyTree)) item =    (* 3node with no children *) (* return problem *)
             if (cmp item loval) = ~1 then
                 problem(loval, Node2(item, EmptyTree, EmptyTree), Node2(hival, EmptyTree, EmptyTree))
             else if (cmp item loval) = 1 andalso (cmp item hival) = ~1 then
@@ -81,7 +76,7 @@ let
 
     |   my_insert23 cmp (Node2(midval, ltree, rtree)) item =    (* recurse on a 2 node *)
         let
-            val ret = (* find the side to recurse on, get the return value either problem | ok *)
+            val ret =
                 if (cmp item midval) = ~1 then
                       (my_insert23 cmp ltree item)
                 else
@@ -90,17 +85,32 @@ let
             case ret of
                  problem(v, Node2(v1,l1,r1), Node2(v2,l2,r2)) =>
                     if (cmp item midval) = ~1 then
-                        ok(Node3(v, midval, Node2(v1,l1,r1), Node2(v2,l2,r2), rtree))
+                        Node3(v, midval, Node2(v1,l1,r1), Node2(v2,l2,r2), rtree)
                     else
-                        ok(Node3(midval, v, ltree, Node2(v1,l1,r1), Node2(v2,l2,r2)))
-                | ok(Node3(v1, v2, l, m, r)) =>
+                        Node3(midval, v, ltree, Node2(v1,l1,r1), Node2(v2,l2,r2))
+                | Node3(v1, v2, l, m, r) =>
                     if (cmp item midval) = ~1 then
-                        ok(Node2(midval, Node3(v1, v2, l, m, r), rtree))
+                        Node2(midval, Node3(v1, v2, l, m, r), rtree)
                     else
-                        ok(Node2(midval, ltree, Node3(v1, v2, l, m, r)))
+                        Node2(midval, ltree, Node3(v1, v2, l, m, r))
         end
+
+
+                (*
+    |   my_insert23 cmp (Node3(loval, hival, ltree, mtree, rtree)) item =    (* recurse on 3 node *)
+            if (cmp item loval) = ~1 then
+                my_insert23 cmp ltree item
+                Node3(loval, hival, ltree, mtree, rtree)
+            else if (cmp item loval) = 1 andalso (cmp item hival) = ~1 then
+                my_insert23 cmp mtree item
+                Node3(loval, hival, ltree, mtree, rtree)
+            else
+                my_insert23 cmp rtree item
+                Node3(loval, hival, ltree, mtree, rtree)
+                *)
+
 in
-    helper (my_insert23 comp tree value)
+    my_insert23 c t v
 end;
 
 

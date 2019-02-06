@@ -54,40 +54,67 @@ fun find23 _ EmptyTree _ =  NONE
 
 (*  Type:  ('a * 'a -> int) -> 'a baltree -> 'a -> 'a baltree  *)
 
-fun insert23 _ EmptyTree item = Node2(item, EmptyTree, EmptyTree)    (* emptytree *)
+fun insert23 c v t =
+let
+    datatype 'a my_problem = problem of 'a * 'a baltree * 'a baltree;
 
-|   insert23 cmp (Node2(midval, EmptyTree, EmptyTree)) item =        (* 2node with no children *)
-        if (cmp item midval) = ~1 then
-            Node3(item, midval, EmptyTree, EmptyTree, EmptyTree)
-        else
-            Node3(midval, item, EmptyTree, EmptyTree, EmptyTree)
+    fun my_insert23 _ EmptyTree item = Node2(item, EmptyTree, EmptyTree)    (* emptytree *)
 
-|   insert23 cmp (Node3(loval, hival, EmptyTree, EmptyTree, EmptyTree)) item =    (* 3node with no children *)
-        if (cmp item loval) = ~1 then
-            Node2(loval, Node2(item, EmptyTree, EmptyTree), Node2(hival, EmptyTree, EmptyTree))
-        else if (cmp item loval) = 1 andalso (cmp item hival) = ~1 then
-            Node2(item, Node2(loval, EmptyTree, EmptyTree), Node2(hival, EmptyTree, EmptyTree))
-        else
-            Node2(hival, Node2(loval, EmptyTree, EmptyTree), Node2(item, EmptyTree, EmptyTree))
+    |   my_insert23 cmp (Node2(midval, EmptyTree, EmptyTree)) item =        (* 2node with no children *)
+            if (cmp item midval) = ~1 then
+                Node3(item, midval, EmptyTree, EmptyTree, EmptyTree)
+            else
+                Node3(midval, item, EmptyTree, EmptyTree, EmptyTree)
 
-|   insert23 cmp (Node2(midval, ltree, rtree)) item =    (* recurse on a 2 node *)
-        if (cmp item midval) = ~1 then
-            Node2(midval, (insert23 cmp ltree item), rtree)
-        else
-            Node2(midval, ltree, (insert23 cmp rtree item))
-(*
-|   insert23 cmp (Node3(loval, hival, ltree, mtree, rtree)) item =    (* recurse on 3 node *)
-        if (cmp item loval) = ~1 then
-            insert23 cmp ltree item
-            Node3(loval, hival, ltree, mtree, rtree)
-        else if (cmp item loval) = 1 andalso (cmp item hival) = ~1 then
-            insert23 cmp mtree item
-            Node3(loval, hival, ltree, mtree, rtree)
-        else
-            insert23 cmp rtree item
-            Node3(loval, hival, ltree, mtree, rtree)
-*)
+    |   my_insert23 cmp (Node3(loval, hival, EmptyTree, EmptyTree, EmptyTree)) item =    (* 3node with no children *) (* return problem *)
+            if (cmp item loval) = ~1 then
+                problem(loval, Node2(item, EmptyTree, EmptyTree), Node2(hival, EmptyTree, EmptyTree))
+            else if (cmp item loval) = 1 andalso (cmp item hival) = ~1 then
+                problem(item, Node2(loval, EmptyTree, EmptyTree), Node2(hival, EmptyTree, EmptyTree))
+            else
+                problem(hival, Node2(loval, EmptyTree, EmptyTree), Node2(item, EmptyTree, EmptyTree))
 
-;
+    |   my_insert23 cmp (Node2(midval, ltree, rtree)) item =    (* recurse on a 2 node *)
+        let
+            val ret =
+                if (cmp item midval) = ~1 then
+                      (my_insert23 cmp ltree item)
+                else
+                      (my_insert23 cmp rtree item)
+        in
+            case ret of
+                 problem(v, Node2(v1,l1,r1), Node2(v2,l2,r2)) =>
+                    if (cmp item midval) = ~1 then
+                        Node3(v, midval, Node2(v1,l1,r1), Node2(v2,l2,r2), rtree)
+                    else
+                        Node3(midval, v, ltree, Node2(v1,l1,r1), Node2(v2,l2,r2))
+                | Node2(v,l,r) =>
+                    if (cmp item midval) = ~1 then
+                        Node2(midval, ret, rtree)
+                    else
+                        Node2(midval, ltree, ret)
+        end
+
+
+                (*
+    |   my_insert23 cmp (Node3(loval, hival, ltree, mtree, rtree)) item =    (* recurse on 3 node *)
+            if (cmp item loval) = ~1 then
+                my_insert23 cmp ltree item
+                Node3(loval, hival, ltree, mtree, rtree)
+            else if (cmp item loval) = 1 andalso (cmp item hival) = ~1 then
+                my_insert23 cmp mtree item
+                Node3(loval, hival, ltree, mtree, rtree)
+            else
+                my_insert23 cmp rtree item
+                Node3(loval, hival, ltree, mtree, rtree)
+                *)
+
+in
+    my_insert23 c v t
+end;
+
+
+
+
 
 

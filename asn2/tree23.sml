@@ -99,6 +99,40 @@ let
                     else
                         ok(Node2(midval, ltree, Node3(v1, v2, l, m, r)))
         end
+
+    |   my_insert23 cmp (Node3(loval, hival, ltree, mtree, rtree)) item =    (* recurse on a 3 node *)
+        let
+            val ret = (* find the side to recurse on, get the return value either problem | ok *)
+                if (cmp item loval) = ~1 then
+                    (my_insert23 cmp ltree item)
+                else if (cmp item loval) = 1 andalso (cmp item hival) = ~1 then
+                    (my_insert23 cmp mtree item)
+                else
+                    (my_insert23 cmp rtree item)
+        in
+            case ret of
+                 problem(v, Node2(v1,l1,r1), Node2(v2,l2,r2)) => (* splitting  *)
+                    if (cmp item loval) = ~1 then
+                        problem(loval,
+                                Node2(v, Node2(v1, l1, r1), Node2(v2 ,l2, r2) ),
+                                Node2(hival, mtree, rtree ) )
+                    else if (cmp item loval) = 1 andalso (cmp item hival) = ~1 then
+                        problem(v,
+                                Node2(loval, ltree, Node2(v1, l1, r1) ),
+                                Node2(hival, Node2(v2 ,l2, r2), rtree ) )
+                    else
+                        problem(hival,
+                                Node2( loval, ltree, mtree),
+                                Node2(v, Node2(v1, l1, r1), Node2(v2 ,l2, r2) ) )
+                | ok(Node3(v1, v2, l, m, r)) =>
+                    if (cmp item loval) = ~1 then
+                        ok(Node3(loval, hival, Node3(v1, v2, l, m, r), mtree, rtree))
+                    else if (cmp item loval) = 1 andalso (cmp item hival) = ~1 then
+                        ok(Node3(loval, hival, ltree, Node3(v1, v2, l, m, r), rtree))
+                    else
+                        ok(Node3(loval, hival, ltree, mtree, Node3(v1, v2, l, m, r)))
+        end
+
 in
     helper (my_insert23 comp tree value)
 end;

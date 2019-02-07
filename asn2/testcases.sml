@@ -38,7 +38,7 @@ find23 compare23 garbagetree 100;
 
 (* ----- insert23 ----- *)
 
-(*
+
 (* test simple split root *)
 val x = EmptyTree;
 val x = insert23 compare23 x 10;
@@ -46,7 +46,7 @@ val x = insert23 compare23 x 20;
 val a = insert23 compare23 x 5;
 val b = insert23 compare23 x 15;
 val c = insert23 compare23 x 25;
-*)
+
 
 (* test bubble up *)
 val x = EmptyTree;
@@ -57,4 +57,23 @@ val x = insert23 compare23 x 10;
 val x = insert23 compare23 x 90;
 val a = insert23 compare23 x 80; (* bubble up right *)
 val b = insert23 compare23 x 20; (* bubble up left *)
+
+val x = EmptyTree;
+val x = insert23 compare23 x 3;
+val x = insert23 compare23 x 5;
+val x = insert23 compare23 x 7;
+val x = insert23 compare23 x 10;
+val a = insert23 compare23 x 8;
+
+val x = EmptyTree;
+val x = insert23 compare23 x 5;
+val x = insert23 compare23 x 8;
+val x = insert23 compare23 x 10;
+val x = insert23 compare23 x 20;
+val x = insert23 compare23 x 6;
+val a = insert23 compare23 x 30;
+val b = insert23 compare23 a 4;
+
+
+
 

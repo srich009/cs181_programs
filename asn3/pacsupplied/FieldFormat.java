@@ -26,20 +26,28 @@ class FieldFormat implements Formatter
     	//   components (fields)
     	public List<NamedObject> getFields(GenObject info)
         {
-            List<NamedObject> l = new LinkedList<NamedObject>();
             Object ob;
             GenObject gob;
             NamedObject nob;
+            List<NamedObject> l_nob = new LinkedList<NamedObject>();
+            List<Class> l_class = new LinkedList<Class>();
 
             // while getSuperClass is not null
             Class cur = info.obj.getClass();
 
             while(cur.getSuperclass() != null)
             {
-                // getDeclaredFields
-                for( Field field : cur.getDeclaredFields() )
-                {
+                l_class.add(cur);
+                cur = cur.getSuperclass();
+            }
 
+            Collections.reverse(l_class);
+            // l_class.reverse();
+            for(Class c : l_class)
+            {
+                // getDeclaredFields
+                for( Field field : c.getDeclaredFields() )
+                {
                     try
                     {
                         field.setAccessible(true); // access private
@@ -56,17 +64,16 @@ class FieldFormat implements Formatter
                             nob = new NamedObject(field.getName(), gob);
                         }
 
-                        l.add(nob);
+                        l_nob.add(nob);
                     }
                     catch(Exception e)
                     {
                         System.out.println("CAUGHT: " + e.toString());
                     }
                 }
-                cur = cur.getSuperclass();
             }
 
-            return l;
+            return l_nob;
         }
 
     	// returns the name to be used for the object "info"

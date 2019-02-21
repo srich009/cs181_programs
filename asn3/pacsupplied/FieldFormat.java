@@ -31,34 +31,40 @@ class FieldFormat implements Formatter
             GenObject gob;
             NamedObject nob;
 
-            // getDeclaredFields
+            // // while getSuperClass is not null
+            // Class cur = info.obj.getClass();
 
-            for( Field field : info.obj.getClass().getDeclaredFields() )
-            {
-                field.setAccessible(true); // access private
-
-                try
+            // while(cur.getSuperclass() != null)
+            // {
+                // getDeclaredFields
+                for( Field field : info.obj.getClass().getDeclaredFields() )
                 {
-                    ob = field.get(info.obj);
 
-                    if(ob != null)
+                    try
                     {
-                        gob = new GenObject(ob, primitiveWrap(ob.getClass().getName()) ); // check if is primitive for the constructor
-                        nob = new NamedObject(field.getName(), gob);
-                    }
-                    else
-                    {
-                        gob = new GenObject(ob, true); // set as true
-                        nob = new NamedObject(field.getName(), gob);
-                    }
+                        field.setAccessible(true); // access private
+                        ob = field.get(info.obj);
 
-                    l.add(nob);
+                        if(ob != null)
+                        {
+                            gob = new GenObject(ob, field.getType()); // check if is primitive for the constructor
+                            nob = new NamedObject(field.getName(), gob);
+                        }
+                        else
+                        {
+                            gob = new GenObject(ob, true); // set as true
+                            nob = new NamedObject(field.getName(), gob);
+                        }
+
+                        l.add(nob);
+                    }
+                    catch(Exception e)
+                    {
+                        System.out.println("CAUGHT: " + e.toString());
+                    }
                 }
-                catch(Exception e)
-                {
-                    System.out.println("CAUGHT: " + e.toString());
-                }
-            }
+            //     cur = cur.getSuperclass();
+            // }
 
             return l;
         }
@@ -66,7 +72,7 @@ class FieldFormat implements Formatter
     	// returns the name to be used for the object "info"
     	public String className(GenObject info)
         {
-            return info.obj.getClass().getName();
+            return info.obj.getClass().getCanonicalName();
         }
 
         // true if the object is actually supposed to be a primitive object

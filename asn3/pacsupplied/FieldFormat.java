@@ -31,13 +31,13 @@ class FieldFormat implements Formatter
             GenObject gob;
             NamedObject nob;
 
-            // // while getSuperClass is not null
-            // Class cur = info.obj.getClass();
+            // while getSuperClass is not null
+            Class cur = info.obj.getClass();
 
-            // while(cur.getSuperclass() != null)
-            // {
+            while(cur.getSuperclass() != null)
+            {
                 // getDeclaredFields
-                for( Field field : info.obj.getClass().getDeclaredFields() )
+                for( Field field : cur.getDeclaredFields() )
                 {
 
                     try
@@ -63,8 +63,8 @@ class FieldFormat implements Formatter
                         System.out.println("CAUGHT: " + e.toString());
                     }
                 }
-            //     cur = cur.getSuperclass();
-            // }
+                cur = cur.getSuperclass();
+            }
 
             return l;
         }

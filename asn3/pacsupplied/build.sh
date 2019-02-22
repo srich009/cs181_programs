@@ -1,10 +1,13 @@
 #!/bin/bash
 
+# can pas part 1-4 with my DataDrawer
+
 LINE="--------------------"
 
 set -e
 
 javac FieldFormat.java
+javac DataDrawer.java
 
 echo $LINE
 
@@ -24,10 +27,10 @@ javac Test4.java && java Test4
 
 echo $LINE
 
-# javac Test5.java && java Test5
-#
-# echo $LINE
-#
+javac Test5.java && java Test5
+
+echo $LINE
+
 # javac Test6.java && java Test6
 #
 # echo $LINE

@@ -6,7 +6,7 @@ class FieldFormat implements Formatter
     	// applies is true iff this formatter can be used with the object "info"
     	public boolean applies(GenObject info)
         {
-            return true; // FIXME
+            return true;
         }
 
         // returns true iff this formatter would prefer to format the object
@@ -34,15 +34,13 @@ class FieldFormat implements Formatter
 
             // while getSuperClass is not null
             Class cur = info.obj.getClass();
-
             while(cur.getSuperclass() != null)
             {
                 l_class.add(cur);
                 cur = cur.getSuperclass();
             }
 
-            Collections.reverse(l_class);
-            // l_class.reverse();
+            Collections.reverse(l_class); // have to get in reverse order for the super class down to sub classes
             for(Class c : l_class)
             {
                 // getDeclaredFields
@@ -60,10 +58,9 @@ class FieldFormat implements Formatter
                         }
                         else
                         {
-                            gob = new GenObject(ob, true); // set as true
+                            gob = new GenObject(ob, field.getType()); // set as true
                             nob = new NamedObject(field.getName(), gob);
                         }
-
                         l_nob.add(nob);
                     }
                     catch(Exception e)
@@ -90,7 +87,7 @@ class FieldFormat implements Formatter
         // isprim should only be true if obj is
         // Integer, Long, Double, Float, Boolean, Character, Byte, Void, or Short
         // (the primitive type wrapper classes)
-        public boolean primitiveWrap(String s)
+        public boolean primitiveWrap(String s) // stupid function, might not actually need.... can try field.getType()
         {
             // System.out.println(s);
             if(

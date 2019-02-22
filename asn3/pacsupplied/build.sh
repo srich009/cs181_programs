@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# can pas part 1-4 with my DataDrawer
+# tests 1-5 parts a-d
 
 LINE="--------------------"
 

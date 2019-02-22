@@ -60,14 +60,14 @@ public class DataDrawer {
 
 		// System.out.println(fmat.className(g));
 
-		if(!o_map.containsKey(g))
+		if(!o_map.containsKey(g.obj))
 		{
 			g_node = g_drawer.addNode(fmat.className(g)); // initial
-			o_map.put(g,g_node); // GenObject to GraphDrawer.Node
+			o_map.put(g.obj,g_node); // GenObject to GraphDrawer.Node
 		}
 		else
 		{
-			g_node = o_map.get(g);
+			g_node = o_map.get(g.obj);
 		}
 
 		// either add a node or add a pointer/value field
@@ -104,14 +104,14 @@ public class DataDrawer {
 					continue;
 				}
 
-				if(o_map.containsKey(n.value))
+				if(o_map.containsKey(n.value.obj))
 				{
-					g_node.addPtrField(n.name,o_map.get(n.value));
+					g_node.addPtrField(n.name,o_map.get(n.value.obj));
 				}
 				else
 				{
 					GraphDrawer.Node g_new = makeNode(fmat.className(n.value));
-					o_map.put(n.value, g_new); // add to map
+					o_map.put(n.value.obj, g_new); // add to map
 					addObjectReal(n.value);
 					g_node.addPtrField(n.name, g_new);
 				}

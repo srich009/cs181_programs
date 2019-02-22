@@ -53,12 +53,12 @@ class FieldFormat implements Formatter
 
                         if(ob != null)
                         {
-                            gob = new GenObject(ob, field.getType()); // check if is primitive for the constructor
+                            gob = new GenObject(ob, primitiveWrap(field.getType())); // check if is primitive for the constructor
                             nob = new NamedObject(field.getName(), gob);
                         }
                         else
                         {
-                            gob = new GenObject(ob, field.getType()); // set as true
+                            gob = new GenObject(ob, primitiveWrap(field.getType())); // set as true
                             nob = new NamedObject(field.getName(), gob);
                         }
                         l_nob.add(nob);
@@ -87,13 +87,17 @@ class FieldFormat implements Formatter
         // isprim should only be true if obj is
         // Integer, Long, Double, Float, Boolean, Character, Byte, Void, or Short
         // (the primitive type wrapper classes)
-        public boolean primitiveWrap(String s) // stupid function, might not actually need.... can try field.getType()
+        public boolean primitiveWrap(Class c)
         {
-            // System.out.println(s);
+            if(c.isPrimitive())
+            {
+                return true;
+            }
+
             if(
-                s == "java.lang.Integer" || s == "java.lang.Long" || s == "java.lang.Double" ||
-                s == "java.lang.Float" || s == "java.lang.Boolean" || s == "java.lang.Character" ||
-                s == "java.lang.Byte" || s == "java.lang.Void" || s == "java.lang.Short"
+                c == Integer.class || c == Long.class || c == Double.class ||
+                c == Float.class || c == Boolean.class || c == Character.class ||
+                c == Byte.class || c == Void.class || c == Short.class
             )
             {
                 return true;

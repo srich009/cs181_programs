@@ -80,16 +80,24 @@ public class DataDrawer {
 			if(n.value.isprim) // addValueField
 			{
 				// System.out.println(n.name);
-				g_node.addValueField(n.name, n.value.obj.toString()); // string name, string value
+				// FIXME -- use the getString()
+				// for each named object check for the appropriate formatter
+
+				Formatter fmat2 = null;
+				for( Formatter f : formatters) // get the formatter
+				{
+					if(f.applies(n.value))
+					{
+						fmat2 = f;
+						break;
+					}
+				}
+
+				g_node.addValueField(n.name, fmat2.getString(n.value)); // string name, string value
 			}
 			else // addPtrField
 			{
 				// make new node and addPtrField
-
-				// System.out.println(n.name);
-				// System.out.println(n.value.obj);
-				// System.out.println(n.value.obj.getClass());
-				// System.out.println(n.value.isprim);
 
 				// check if n.value.obj is in map
 				// if so then pass that inot addPtrField

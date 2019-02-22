@@ -7,7 +7,7 @@ public class Test7 {
 		DataDrawer dds = new DataDrawer(gd);
 		dds.addFormatter(new FieldFormat());
 		dds.addFormatter(new ArrayFormat());
-		//dds.addFormatter(new StringFormat(true));
+		dds.addFormatter(new StringFormat(true));
 		//dds.addFormatter(new StringFormat(false));
 		A[] as = new A[3];
 		for(int i=0;i<3;i++) {

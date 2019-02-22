@@ -4,6 +4,12 @@ public class TxtDrawer implements GraphDrawer {
 
 	public class TxtNode implements GraphDrawer.Node {
 		// a constructor here...
+
+		public TxtDrawer() // 
+		{
+
+		}
+
 		public void addValueField(String name, String value) {
 			// code here
 		}

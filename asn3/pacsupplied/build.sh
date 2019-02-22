@@ -1,8 +1,6 @@
 #!/bin/bash
 
-# tests 1-6 parts a-e
-
-# test 7 is maybe wrong because needs string formatter
+# tests 1-7 parts a-e
 
 LINE="--------------------"
 

@@ -77,21 +77,22 @@ public class DataDrawer {
 
 		for(Formatter.NamedObject n : n_list)
 		{
-			if(n.value.isprim) // addValueField
+
+			Formatter fmat2 = null;
+			for( Formatter f : formatters) // get the formatter needed
+			{
+				if(f.applies(n.value))
+				{
+					fmat2 = f;
+					break;
+				}
+			}
+
+			if(fmat2.preferString(n.value)) // addValueField
 			{
 				// System.out.println(n.name);
 				// FIXME -- use the getString()
 				// for each named object check for the appropriate formatter
-
-				Formatter fmat2 = null;
-				for( Formatter f : formatters) // get the formatter
-				{
-					if(f.applies(n.value))
-					{
-						fmat2 = f;
-						break;
-					}
-				}
 
 				g_node.addValueField(n.name, fmat2.getString(n.value)); // string name, string value
 			}

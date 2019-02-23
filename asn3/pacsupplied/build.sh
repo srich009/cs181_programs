@@ -41,8 +41,8 @@ echo $LINE
 javac Test7.java && java Test7    # PASS
 
 echo $LINE
-#
-# javac Test8.java && java Test8
-#
-# echo $LINE
+
+javac Test8.java && java Test8
+
+echo $LINE
 

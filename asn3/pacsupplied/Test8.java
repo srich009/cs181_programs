@@ -3,7 +3,7 @@ import java.util.*;
 
 public class Test8 {
 	static public void main(String[] args) throws IOException {
-		//GraphDrawer gd = new TxtDrawer("-");
+		// GraphDrawer gd = new TxtDrawer("-");
 		GraphDrawer gd = new DotDrawer("-");
 		DataDrawer dds = new DataDrawer(gd);
 		dds.addFormatter(new FieldFormat());

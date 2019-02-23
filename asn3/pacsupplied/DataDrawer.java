@@ -77,62 +77,57 @@ public class DataDrawer {
 
 		for(Formatter.NamedObject n : n_list)
 		{
-
-			// if(n.value == null) // null pointer exception && illegal reflective access # 8
-			// {
-			// 	continue;
-			// }
-
-			Formatter fmat2 = null;
-			for( Formatter f : formatters) // get the formatter needed
-			{
-				// if(f == null) continue; // null pointer exception && illegal reflective access #8
-				// System.out.println(n.name);
-
-				if(f.applies(n.value))
+			try{
+				Formatter fmat2 = null;
+				for( Formatter f : formatters) // get the formatter needed
 				{
-					fmat2 = f;
-					break;
+					if(f.applies(n.value))
+					{
+						fmat2 = f;
+						break;
+					}
+				}
+
+				if(fmat2.preferString(n.value)) // addValueField
+				{
+					// System.out.println(n.name);
+					// FIXME -- use the getString()
+					// for each named object check for the appropriate formatter
+
+					g_node.addValueField(n.name, fmat2.getString(n.value)); // string name, string value
+				}
+				else // addPtrField
+				{
+					// make new node and addPtrField
+
+					// check if n.value.obj is in map
+					// if so then pass that inot addPtrField
+					// else create a new node add that to the hash
+					// and add that as the pointer field
+					// but this also needs an object to get the fields for the node
+					// recursive helper
+
+					if(n.value.obj == null) // null pointers get value fields because pointer doesnt exist
+					{
+						g_node.addValueField(n.name, ""); // string name, string value
+						continue;
+					}
+
+					if(o_map.containsKey(n.value.obj))
+					{
+						g_node.addPtrField(n.name,o_map.get(n.value.obj));
+					}
+					else
+					{
+						GraphDrawer.Node g_new = makeNode(fmat.className(n.value));
+						o_map.put(n.value.obj, g_new); // add to map
+						addObjectReal(n.value);
+						g_node.addPtrField(n.name, g_new);
+					}
 				}
 			}
-
-			if(fmat2.preferString(n.value)) // addValueField
-			{
-				// System.out.println(n.name);
-				// FIXME -- use the getString()
-				// for each named object check for the appropriate formatter
-
-				g_node.addValueField(n.name, fmat2.getString(n.value)); // string name, string value
-			}
-			else // addPtrField
-			{
-				// make new node and addPtrField
-
-				// check if n.value.obj is in map
-				// if so then pass that inot addPtrField
-				// else create a new node add that to the hash
-				// and add that as the pointer field
-				// but this also needs an object to get the fields for the node
-				// recursive helper
-
-				if(n.value.obj == null) // null pointers get value fields because pointer doesnt exist
-				{
-					g_node.addValueField(n.name, ""); // string name, string value
-					continue;
-				}
-
-				if(o_map.containsKey(n.value.obj))
-				{
-					g_node.addPtrField(n.name,o_map.get(n.value.obj));
-				}
-				else
-				{
-					GraphDrawer.Node g_new = makeNode(fmat.className(n.value));
-					o_map.put(n.value.obj, g_new); // add to map
-					addObjectReal(n.value);
-					g_node.addPtrField(n.name, g_new);
-				}
-			}
+			catch(Exception e) // null pointer exception && illegal reflective access # 8 
+			{}
 		}
 
 		return;

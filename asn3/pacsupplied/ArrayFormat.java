@@ -70,21 +70,21 @@ class ArrayFormat implements Formatter
             return info.obj.getClass().getCanonicalName();
         }
 
-        public boolean primitiveWrap(Class c) 
+        public boolean primitiveWrap(Class c)
         {
             if(c.isPrimitive())
             {
                 return true;
             }
 
-            if(
-                c == Integer.class || c == Long.class || c == Double.class ||
-                c == Float.class || c == Boolean.class || c == Character.class ||
-                c == Byte.class || c == Void.class || c == Short.class
-            )
-            {
-                return true;
-            }
+            // if(
+            //     c == Integer.class || c == Long.class || c == Double.class ||
+            //     c == Float.class || c == Boolean.class || c == Character.class ||
+            //     c == Byte.class || c == Void.class || c == Short.class
+            // )
+            // {
+            //     return true;
+            // }
             return false;
         }
 }

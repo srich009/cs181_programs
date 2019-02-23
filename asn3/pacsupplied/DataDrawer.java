@@ -78,9 +78,17 @@ public class DataDrawer {
 		for(Formatter.NamedObject n : n_list)
 		{
 
+			// if(n.value == null) // null pointer exception && illegal reflective access # 8
+			// {
+			// 	continue;
+			// }
+
 			Formatter fmat2 = null;
 			for( Formatter f : formatters) // get the formatter needed
 			{
+				// if(f == null) continue; // null pointer exception && illegal reflective access #8
+				// System.out.println(n.name);
+
 				if(f.applies(n.value))
 				{
 					fmat2 = f;

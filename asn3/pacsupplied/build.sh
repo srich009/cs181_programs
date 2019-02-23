@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# tests 1-7 parts a-e
+# tests 1-7 parts a-f
+# test 8 is crazy??
 
 LINE="--------------------"
 
@@ -9,6 +10,7 @@ set -e
 javac FieldFormat.java
 javac DataDrawer.java
 javac ArrayFormat.java
+javac TxtDrawer.java
 
 echo $LINE
 
@@ -39,7 +41,7 @@ echo $LINE
 javac Test7.java && java Test7    # PASS
 
 echo $LINE
-
+#
 # javac Test8.java && java Test8
 #
 # echo $LINE

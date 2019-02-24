@@ -2,14 +2,16 @@ import java.util.*;
 
 // a class for coordinating the drawer and formatters to produce
 // the output
-public class DataDrawer {
+public class DataDrawer
+{
 
 	private GraphDrawer g_drawer;
 	private LinkedList<Formatter> formatters;
 	Map<Object,GraphDrawer.Node> o_map;
 
 	// a constructor, which should take (and save) the drawer to be used
-	public DataDrawer(GraphDrawer drawer) {
+	public DataDrawer(GraphDrawer drawer)
+	{
 		g_drawer = drawer;
 		formatters = new LinkedList<Formatter>();
 		o_map = new HashMap<Object,GraphDrawer.Node>();
@@ -101,7 +103,7 @@ public class DataDrawer {
 					// make new node and addPtrField
 
 					// check if n.value.obj is in map
-					// if so then pass that inot addPtrField
+					// if so then pass that into addPtrField
 					// else create a new node add that to the hash
 					// and add that as the pointer field
 					// but this also needs an object to get the fields for the node
@@ -126,7 +128,7 @@ public class DataDrawer {
 					}
 				}
 			}
-			catch(Exception e) // null pointer exception && illegal reflective access # 8 
+			catch(Exception e) // null pointer exception && illegal reflective access # 8
 			{}
 		}
 

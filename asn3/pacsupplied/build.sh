@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# tests 1-7 parts a-f
-# test 8 is crazy??
-
 LINE="--------------------"
 
 set -e
@@ -42,7 +39,8 @@ javac Test7.java && java Test7    # PASS
 
 echo $LINE
 
-javac Test8.java && java Test8
+javac Test8.java && java Test8    # PASS
 
 echo $LINE
 
+java Test8 | dot -Tpng > p.png

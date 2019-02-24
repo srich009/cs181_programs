@@ -1,0 +1,99 @@
+--------------------
+node 0: Test1.A
+        i: 3
+        d: 3.5
+
+--------------------
+node 0: Test2.A
+        i: 3
+        d: 3.5
+
+--------------------
+node 0: Test3.A
+        i: 3
+        d: 3.5
+        next: -> node 1
+
+node 1: Test3.A
+        i: -1
+        d: -0.5
+        next:
+
+--------------------
+node 0: Test4.C
+        i: 3
+        d: 3.5
+        next: -> node 1
+        e: 100.75
+        f: 103.75
+
+node 1: Test4.B
+        i: -1
+        d: -0.5
+        next:
+        e: -3.14
+
+--------------------
+node 0: Test5.B
+        i: 3
+        d: 3.5
+        next: -> node 1
+        e: 4.5
+
+node 1: Test5.A
+        i: -1
+        d: -0.5
+        next:
+
+node 2: Test5.B
+        i: 0
+        d: 0.5
+        next: -> node 1
+        e: -100.3
+
+--------------------
+node 0: Test6.A[]
+        [0]: -> node 1
+        [1]: -> node 2
+        [2]: -> node 3
+
+node 1: Test6.A
+        i: 0
+        d: 0.5
+        next: -> node 1
+
+node 2: Test6.A
+        i: 1
+        d: 1.5
+        next: -> node 1
+
+node 3: Test6.A
+        i: 2
+        d: 2.5
+        next: -> node 1
+
+--------------------
+node 0: Test7.A[]
+        [0]: -> node 1
+        [1]: -> node 2
+        [2]: -> node 3
+
+node 1: Test7.A
+        i: 0
+        d: 0.5
+        name: "zero"
+        next: -> node 1
+
+node 2: Test7.A
+        i: 1
+        d: 1.5
+        name: "positive"
+        next: -> node 1
+
+node 3: Test7.A
+        i: 2
+        d: 2.5
+        name: "positive"
+        next: -> node 1
+
+--------------------

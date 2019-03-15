@@ -1,0 +1,12 @@
+Note that there is a strange field called this$0.
+Can you explain why? Can you explain why some records have two fields with this name?
+
+Answer:
+
+The this$0 field is a reference in the inner class to the outer class which where it is inside.
+The inner class has a hidden reference to its enclosing class.
+
+The case where there are 2 this$0 fields is seen in the the inner class of B.
+This is because the B class and its inner class extends the A class and its inner class.
+Therefore the inner class must have a reference to its enclosing class and the super class of its enclosing class.
+

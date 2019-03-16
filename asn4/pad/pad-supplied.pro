@@ -83,24 +83,29 @@ allbogglewords(B,X) :- loaddict(bogwords,D),
 % question 1
 % isboggleword(+board,+dictionary,?word)
 
-isboggleword(B,node(X,true,_,_),[X]) :-
-	boggleletter(B,_,_,X).
+isboggleword(B,D,W) :-
+	isboggleword2(B,D,W,[]).
 
-isboggleword(B,node(H,_,G,_),[H,H2|T]) :-
+isboggleword2(B, node(X,true,_,_), [X], LST) :-
+	boggleletter(B, _, _, X).
+
+isboggleword2(B, node(H,_,G,_), [H,H2|T], LST) :-
 	boggleletter(B,X,Y,H),	    % set x,y
+	visited(L,X,Y),				% check visit
+	append([(X,Y)],LST,L2),			% append point to list
 	boghelper(B,X,Y,H2),	    % adjacent letter
-	isboggleword(B,G,[H2|T]).	% recurse on subtree down change D
+	isboggleword2(B,G,[H2|T],L2).	% recurse on subtree down change D
 
-isboggleword(B,node(_,_,_,Y),X) :-
-	isboggleword(B,Y,X).	% recurse on subtree right change D
+isboggleword2(B, node(_,_,_,Y), X, LST) :-
+	isboggleword2(B,Y,X,LST).	% recurse on subtree right change D
 
 % check in 8 directions
 % -board, ?x,y,c
 
-boghelper(B,X,Y,C) :- XX is X+1, boggleletter(B,XX,Y,C).
-boghelper(B,X,Y,C) :- XX is X-1, boggleletter(B,XX,Y,C).
-boghelper(B,X,Y,C) :- YY is Y+1, boggleletter(B,X,YY,C).
-boghelper(B,X,Y,C) :- YY is Y-1, boggleletter(B,X,YY,C).
+boghelper(B,X,Y,C) :- XX is X+1, boggleletter(B,XX,Y,C).	% right
+boghelper(B,X,Y,C) :- XX is X-1, boggleletter(B,XX,Y,C).	% left
+boghelper(B,X,Y,C) :- YY is Y+1, boggleletter(B,X,YY,C).	% up
+boghelper(B,X,Y,C) :- YY is Y-1, boggleletter(B,X,YY,C).	% down
 
 boghelper(B,X,Y,C) :- XX is X+1, YY is Y+1, boggleletter(B,XX,YY,C).
 boghelper(B,X,Y,C) :- XX is X-1, YY is Y+1, boggleletter(B,XX,YY,C).
@@ -116,10 +121,16 @@ boghelper(B,X,Y,C) :- XX is X-1, YY is Y-1, boggleletter(B,XX,YY,C).
 % node(X,_,Y,_),    [X|RX]
 % node(_,_,_,Y),    [X|RX]
 
+% success on reach empty lsit because then never saw befpre
+
+visited([],XN,YN).	% base never visited
+
+visited([(P1,P2)|T],XN,YN) :-	% recurse because didnt match
+	visited(T,XN,YN).
+
 
 % question 2
-
-
+% should not do the go back on the same already seem chars.
 
 % question 3
 % removedup(+inlist,-outlist)
